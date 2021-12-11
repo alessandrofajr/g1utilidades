@@ -26,14 +26,14 @@ def infos_downdetector():
       'domingo'
     ]
 
-    dia_t_base = dias_titulo[hoje.weekday()].lower() #Variável para o dia de hoje no título
-    dia_c_base = dias[hoje.weekday()].lower() #Variável para o dia de hoje no texto
+    dia_t = dias_titulo[hoje.weekday()].lower() #Variável para o dia de hoje no título
+    dia_c = dias[hoje.weekday()].lower() #Variável para o dia de hoje no texto
     hora = datetime.now(timezone('America/Sao_Paulo')) #Puxa a hora local
-    hora_c_base = str((hora.strftime('%Hh%M'))) #Define o formato da hora
-    hora_c_sub_base = re.sub(r"\w$", "0", hora_c_base) #Substitui o último dígito da hora por zero, para arredondar
+    hora_c = str((hora.strftime('%Hh%M'))) #Define o formato da hora
+    hora_c_sub = re.sub(r"\w$", "0", hora_c) #Substitui o último dígito da hora por zero, para arredondar
 
-    dia_t_base = dias_titulo[hoje.weekday()].lower()
-    dia_c_base = dias[hoje.weekday()].lower()
-    hora_c_base = (hora.strftime('%Hh%M'))
+    dia_t = dias_titulo[hoje.weekday()].lower()
+    dia_c = dias[hoje.weekday()].lower()
+    hora_c = (hora.strftime('%Hh%M'))
 
-    return hoje, dia_t_base, dia_c_base, hora_c_base, hora_c_sub_base
+    return hoje, dia_t, dia_c, hora_c, hora_c_sub
