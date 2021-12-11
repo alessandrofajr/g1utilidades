@@ -1,0 +1,107 @@
+import os
+import requests
+import re
+
+from datetime import date
+from datetime import datetime
+from flask import Flask, request, redirect, render_template, url_for
+from pytz import timezone
+
+
+hoje = date.today() #Puxa a data de hoje
+dias_titulo = [ #Lista com os dias para entrar no título
+  'segunda',
+  'terça',
+  'quarta',
+  'quinta',
+  'sexta',
+  'sábado',
+  'domingo'
+]
+dias = [ #Lista com os dias para entrar no texto
+  'segunda-feira',
+  'terça-feira',
+  'quarta-feira',
+  'quinta-feira',
+  'sexta-feira',
+  'sábado',
+  'domingo'
+]
+
+dia_t_base = dias_titulo[hoje.weekday()].lower() #Variável para o dia de hoje no título
+dia_c_base = dias[hoje.weekday()].lower() #Variável para o dia de hoje no texto
+hora = datetime.now(timezone('America/Sao_Paulo')) #Puxa a hora local
+hora_c_base = str((hora.strftime('%Hh%M'))) #Define o formato da hora
+hora_c_sub_base = re.sub(r"\w$", "0", hora_c_base) #Substitui o último dígito da hora por zero, para arredondar
+
+dia_t_base = dias_titulo[hoje.weekday()].lower()
+dia_c_base = dias[hoje.weekday()].lower()
+hora_c_base = (hora.strftime('%Hh%M'))
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    return render_template("home.html")
+
+@app.route("/downdetector")
+def down():
+    return render_template(
+        "downdetector.html",
+    )
+
+@app.route("/downdetector", methods=['POST'])
+def down_post():
+    service_form = request.form['service']
+    reports_form = request.form['reports']
+    world_form = request.form['world']
+
+    titulo_1 = f"{service_form} apresenta instabilidade ao redor do mundo neste {dia_t_base}"
+    linha_fina_1 = f'Plataforma ficou fora do ar para algumas pessoas por volta das {hora_c_sub_base}.'
+    texto_1 = f'''Usuários ao redor do mundo relataram dificuldades para acessar o {service_form} neste {dia_c_base} ({hoje.strftime("%-d")}).
+    O site Downdetector, que reúne relatos de instabilidade, registrou problemas por voltas das {hora_c_sub_base} com mais de {reports_form} reclamações.
+    O g1 procurou o {service_form} e não teve retorno até a última atualização desta reportagem.'''
+
+    titulo_2 = f'{service_form} apresenta instabilidade neste {dia_t_base}'
+    linha_fina_2 = f'Plataforma ficou fora do ar para algumas pessoas por volta das {hora_c_sub_base}.'
+    texto_2 = f'''Usuários no Brasil relataram dificuldades para acessar o {service_form} neste {dia_c_base} ({hoje.strftime("%-d")}).
+    O site Downdetector, que reúne relatos de instabilidade, registrou problemas por voltas das {hora_c_sub_base} com mais de {reports_form} reclamações.
+    O g1 procurou o {service_form} e não teve retorno até a última atualização desta reportagem.'''
+
+    titulo_3 = f'{service_form} apresenta instabilidade nesta {dia_t_base}'
+    linha_fina_3 = f'Plataforma ficou fora do ar para algumas pessoas por volta das {hora_c_sub_base}.'
+    texto_3 = f'''Usuários ao redor do mundo relataram dificuldades para acessar o {service_form} nesta {dia_c_base} ({hoje.strftime("%-d")}).
+    O site Downdetector, que reúne relatos de instabilidade, registrou problemas por voltas das {hora_c_sub_base} com mais de {reports_form} reclamações.
+    O g1 procurou o {service_form} e não teve retorno até a última atualização desta reportagem.'''
+
+    titulo_4 = f'{service_form} apresenta instabilidade nesta {dia_t_base}'
+    linha_fina_4 = f'Plataforma ficou fora do ar para algumas pessoas por volta das {hora_c_sub_base}.'
+    texto_4 = f'''Usuários no Brasil relataram dificuldades para acessar o {service_form} nesta {dia_c_base} ({hoje.strftime("%-d")}).
+    O site Downdetector, que reúne relatos de instabilidade, registrou problemas por voltas das {hora_c_sub_base} com mais de {reports_form} reclamações.
+    O g1 procurou o {service_form} e não teve retorno até a última atualização desta reportagem.'''
+
+    if world_form == 'S' and dia_t_base in ['sábado','domingo']:
+        return render_template("downdetector.html",titulo = titulo_1, linha_fina = linha_fina_1, texto = texto_1)
+    elif world_form == 'N' and dia_t_base in ['sábado','domingo']:
+        return render_template("downdetector.html", titulo = titulo_2, linha_fina = linha_fina_2, texto = texto_2)
+    elif world_form == 'S' and dia_t_base not in ['sábado','domingo']:
+        return render_template("downdetector.html", titulo = titulo_3, linha_fina = linha_fina_3, texto = texto_3)
+    else:
+        return render_template("downdetector.html", titulo = titulo_4, linha_fina = linha_fina_4, texto = texto_4)
+
+@app.route("/compartilhar")
+def my_form():
+    return render_template(
+        "compartilhar.html",
+    )
+
+@app.route("/compartilhar", methods=['POST'])
+def my_form_post():
+    text = request.form['text']
+    link_whatsapp = f"https://api.whatsapp.com/send?text={text}?utm_source%3Dwhatsapp%26utm_medium%3Dshare-engagement%26utm_campaign%3Dte-materias"
+    link_telegram = f"https://telegram.me/share/url?url={text}?utm_source%3Dtelegram%26utm_medium%3Dshare-engagement%26utm_campaign%3Dte-materias"
+    return render_template(
+        "compartilhar.html",
+        whatsapp=link_whatsapp,
+        telegram=link_telegram
+    )

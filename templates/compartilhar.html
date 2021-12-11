@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Link para compartilhar notícias via WhatsApp e Telegram{% endblock %}
+{% block cabecalho %}Gere um link para compartilhar notícias via WhatsApp e Telegram{% endblock %}
+{% block conteudo %}
+  <p>
+    <form method="POST">
+      <input name="text">
+      <input type="submit">
+    </form>
+    <br />
+    <b>Compartilhe essa notícia no WhatsApp:</b> {{ whatsapp }}
+  </p>
+  <p>
+    <b>Compartilhe essa notícia no Telegram:</b> {{ telegram }}
+  </p>
+
+  <br />
+  <p><a href="/">Voltar para a página inicial</a></p>
+  <p><i>Esse site foi criado por Alessandro Feitosa Jr. Bugs, dúvidas, sugestões: alessandro.junior@g.globo</i></p>
+{% endblock %}

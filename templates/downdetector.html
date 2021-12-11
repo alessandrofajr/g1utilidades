@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Site caiu?{% endblock %}
+{% block cabecalho %}Gere um texto rápido caso um serviço esteja fora do ar{% endblock %}
+{% block conteudo %}
+
+  <p>
+    <form method="POST">
+      Serviço que caiu:
+      <input type="text" name="service"><br /><br />
+      Quantos relatos no Downdetector?
+      <input type="text" name="reports"><br /><br />
+      Caiu ao redor do mundo?
+      <input type="radio"  name="world" value="S"/>Sim
+      <input type="radio"  name="world" value="N"/>Não<br /><br />
+      <input type="submit">
+    </form>
+    <br />
+    <p><b>Seu texto aparecerá abaixo:</b></p>
+
+    <h1>{{ titulo }}</h1>
+    <h2> {{ linha_fina }} </h2>
+    <p>{{ texto }}</p>
+
+    <br />
+    <p><a href="/">Voltar para a página inicial</a></p>
+    <p><i>Esse site foi criado por Alessandro Feitosa Jr. Bugs, dúvidas, sugestões: alessandro.junior@g.globo</i></p>
+{% endblock %}
