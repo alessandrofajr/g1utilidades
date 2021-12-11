@@ -7,36 +7,7 @@ from datetime import datetime
 from flask import Flask, request, redirect, render_template, url_for
 from pytz import timezone
 
-
-hoje = date.today() #Puxa a data de hoje
-dias_titulo = [ #Lista com os dias para entrar no título
-  'segunda',
-  'terça',
-  'quarta',
-  'quinta',
-  'sexta',
-  'sábado',
-  'domingo'
-]
-dias = [ #Lista com os dias para entrar no texto
-  'segunda-feira',
-  'terça-feira',
-  'quarta-feira',
-  'quinta-feira',
-  'sexta-feira',
-  'sábado',
-  'domingo'
-]
-
-dia_t_base = dias_titulo[hoje.weekday()].lower() #Variável para o dia de hoje no título
-dia_c_base = dias[hoje.weekday()].lower() #Variável para o dia de hoje no texto
-hora = datetime.now(timezone('America/Sao_Paulo')) #Puxa a hora local
-hora_c_base = str((hora.strftime('%Hh%M'))) #Define o formato da hora
-hora_c_sub_base = re.sub(r"\w$", "0", hora_c_base) #Substitui o último dígito da hora por zero, para arredondar
-
-dia_t_base = dias_titulo[hoje.weekday()].lower()
-dia_c_base = dias[hoje.weekday()].lower()
-hora_c_base = (hora.strftime('%Hh%M'))
+from downdetector import infos_downdetector
 
 app = Flask(__name__)
 
@@ -55,6 +26,7 @@ def down_post():
     service_form = request.form['service']
     reports_form = request.form['reports']
     world_form = request.form['world']
+    hoje, dia_t_base, dia_c_base, hora_c_base, hora_c_sub_base = infos_downdetector()
 
     titulo_1 = f"{service_form} apresenta instabilidade ao redor do mundo neste {dia_t_base}"
     linha_fina_1 = f'Plataforma ficou fora do ar para algumas pessoas por volta das {hora_c_sub_base}.'
