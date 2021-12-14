@@ -3,7 +3,7 @@ import re
 from datetime import date
 from datetime import datetime
 from flask import Flask, request, redirect, render_template, url_for
-from pytz import timezone
+import pytz
 
 def infos_downdetector():
     hoje = datetime.now(pytz.timezone('America/Sao_Paulo')) #Puxa a data de hoje
