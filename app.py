@@ -1,10 +1,7 @@
 import requests
 import re
 
-from datetime import date
-from datetime import datetime
 from flask import Flask, request, redirect, render_template, url_for
-from pytz import timezone
 
 from downdetector import infos_downdetector
 
@@ -52,13 +49,15 @@ def down_post():
     O g1 procurou o {service_form} e não teve retorno até a última atualização desta reportagem.'''
 
     if world_form == 'S' and dia_t in ['sábado','domingo']:
-        return render_template("downdetector.html",titulo = titulo_1, linha_fina = linha_fina_1, texto = texto_1)
+        titulo_return, linha_fina_return, texto_return = titulo_1, linha_fina_1, texto_1
     elif world_form == 'N' and dia_t in ['sábado','domingo']:
-        return render_template("downdetector.html", titulo = titulo_2, linha_fina = linha_fina_2, texto = texto_2)
+        titulo_return, linha_fina_return, texto_return = titulo_2, linha_fina_2, texto_2
     elif world_form == 'S' and dia_t not in ['sábado','domingo']:
-        return render_template("downdetector.html", titulo = titulo_3, linha_fina = linha_fina_3, texto = texto_3)
+        titulo_return, linha_fina_return, texto_return = titulo_3, linha_fina_3, texto_3
     else:
-        return render_template("downdetector.html", titulo = titulo_4, linha_fina = linha_fina_4, texto = texto_4)
+        titulo_return, linha_fina_return, texto_return = titulo_3, linha_fina_3, texto_3
+
+    return render_template("downdetector.html", titulo = titulo_return, linha_fina = linha_fina_return, texto = texto_return)
 
 @app.route("/compartilhar")
 def my_form():
