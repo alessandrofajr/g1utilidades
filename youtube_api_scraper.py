@@ -52,13 +52,11 @@ extraction_date = [str(datetime.now(timezone('America/Sao_Paulo')))]*len(videos_
 video_link_string = 'https://www.youtube.com/watch?v='
 video_link = [video_link_string + video for video in videoid]
 liked = []
-disliked = []
 views = []
 comment = []
 
 for video in stats:
     liked.append(video['statistics'].get('likeCount'))
-    disliked.append(video['statistics'].get('dislikeCount'))
     views.append(video['statistics'].get('viewCount'))
     comment.append(video['statistics'].get('commentCount'))
         
@@ -71,7 +69,6 @@ df = pd.DataFrame({
     'published_date':published_date,
     'extraction_date':extraction_date,
     'likes':liked,
-    'dislikes':disliked,
     'views':views,
     'comment':comment,
     'thumbnail': url_thumbnails})
