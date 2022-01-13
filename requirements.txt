@@ -1,4 +1,10 @@
-flask
-gunicorn
 datetime
+flask
+google-api-python-client
+gspread
+gspread_dataframe
+gunicorn
+pandas
+pytz
 requests
+sendgrid
