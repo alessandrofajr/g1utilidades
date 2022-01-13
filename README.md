@@ -6,3 +6,5 @@ A **[primeira ferramenta](https://g1utilidades.herokuapp.com/downdetector)** pre
 Existem 4 versões possíveis de texto: uma com contrações adaptadas para dias de final de semana (neste sábado, neste domingo); uma com contrações para dias de semana (nesta segunda, nesta terça); e outras duas que combinam essas duas condições com a condição de a instabilidade afetar somente o Brasil ou todo o mundo. O dia da semana e o horário são puxados automaticamente pelo programa.
 
 A **[segunda ferramenta](https://g1utilidades.herokuapp.com/compartilhar)** devolve URLs para o compartilhamento no WhatsApp e no Telegram depois de o usuário incluir o link de sua reportagem. O g1 utiliza esses hiperliks em algumas notícias para que as pessoas dividam aquele material com seus contatos.
+
+A **terceira ferramenta** monitora o canal de Jair Bolsonaro diariamente e dispara um e-mail caso um de seus vídeos seja removido.
