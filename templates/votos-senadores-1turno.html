@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Os votos dos Senadores no 1º turno{% endblock %}
+
+{% block cabecalho %}Gere a tabela para saber como votou cada senador no 1º turno{% endblock %}
+{% block conteudo %}
+
+    <form method="POST">
+      Link da votação:
+      <input type="text" name="votacao_senado_1turno"> <input type="submit">
+    </form>
+    <br />
+    <p><b>Veja o resultado abaixo:</b></p>
+    <input id="copy_btn" type="button" value="Copiar tabela"><br /><br />
+    {% for table in tables %}
+            {{ table|safe }}
+    {% endfor %}
+    
+        <script>
+        window.onload=function(){
+            var copyBtn = document.querySelector('#copy_btn');
+            copyBtn.addEventListener('click', function () {
+            var urlField = document.querySelector('table');
+
+            // create a Range object
+            var range = document.createRange();  
+            // set the Node to select the "range"
+            range.selectNode(urlField);
+            // add the Range to the set of window selections
+            window.getSelection().addRange(range);
+
+            // execute 'copy', can't 'cut' in this case
+            document.execCommand('copy');
+            }, false);
+        }
+        </script>
+
+    
+
+    <br />
+    <p><a href="/">Voltar para a página inicial</a></p>
+    <p><i>Esse site foi criado por Alessandro Feitosa Jr. Bugs, dúvidas, sugestões: alessandro.junior@g.globo</i></p>
+{% endblock %}

@@ -1,6 +1,8 @@
 import requests
 import re
 
+import pandas as pd
+from bs4 import BeautifulSoup
 from flask import Flask, request, redirect, render_template, url_for
 
 from downdetector import infos_downdetector
@@ -10,6 +12,198 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     return render_template("home.html")
+
+@app.route("/votos-camara")
+def votos_camara():
+    return render_template(
+        "votos-camara.html",
+    )
+
+@app.route("/votos-camara", methods=['POST'])
+def votos_camara_post():
+    votacao_form = request.form['votacao_camara']
+    url = votacao_form
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    votacao = soup.find('div', class_='titulares')
+
+    votos = []
+    for li in votacao.select('li'):
+        votos.append({x.get('class')[0]: x.text for x in li.select('span')})
+
+    df = pd.DataFrame(votos)
+
+    df = df.drop('votou', 1)
+    df['voto'] = df['voto'].fillna('Ausente')
+    df = df.replace({'voto' : {'Art. 17':'Não votou'}})
+    df['nomePartido'] = df['nomePartido'].str.replace(r"([()])","")
+    df[['nomePartido', 'UF']] = df['nomePartido'].str.split('-', 1, expand=True)
+    df = df.drop('UF', 1)
+    df = df.replace({'nomePartido' : {'Republican':'Republicanos', 
+                        'Podemos':'PODE', 
+                        'PCdoB':'PC do B',
+                        'Solidaried':'SOLIDARIEDADE', 
+                        'S.Part.':'S/Partido'}})
+    df = df.replace({'nome' : {'Alencar S. Braga':'Alencar Santana Braga', 
+                        "AlexandreSerfiotis":"Alexandre Serfiotis", 
+                        'Arthur O. Maia':'Arthur Oliveira Maia', 
+                        'Cap. Alberto Neto':'Capitão Alberto Neto', 
+                        'Carlos Gaguim': 'Carlos Henrique Gaguim', 
+                        'Cezinha Madureira': 'Cezinha de Madureira',
+                        'Charlles Evangelis':'Charlles Evangelista',
+                        'Chico D´Angelo':"Chico D'Angelo",
+                        'Christiane Yared':'Christiane de Souza Yared',
+                        'CoronelChrisóstom':'Coronel Chrisóstomo',
+                        'Daniela Waguinho':'Daniela do Waguinho',
+                        'Danrlei':'Danrlei de Deus Hinterholz',
+                        'DelAntônioFurtado':'Delegado Antônio Furtado',
+                        'Deleg. Éder Mauro':'Delegado Éder Mauro',
+                        'Delegado Marcelo':'Delegado Marcelo Freitas',
+                        'Dr Zacharias Calil':'Dr. Zacharias Calil',
+                        'Dr. Sinval':'Dr. Sinval Malheiros',
+                        'Dr.Luiz Antonio Jr':'Dr. Luiz Antonio Teixeira Jr.',
+                        'Dra.Soraya Manato':'Dra. Soraya Manato',
+                        'EdmilsonRodrigues':'Edmilson Rodrigues',
+                        'EduardoBolsonaro':'Eduardo Bolsonaro',
+                        'Emanuel Pinheiro N':'Emanuel Pinheiro Neto',
+                        'EuclydesPettersen':'Euclydes Pettersen',
+                        'Evair de Melo':'Evair Vieira de Melo',
+                        'FelipeFrancischini':'Felipe Francischini',
+                        'Félix Mendonça Jr':'Félix Mendonça Júnior',
+                        'FernandaMelchionna':'Fernanda Melchionna',
+                        'Fernando Coelho':'Fernando Coelho Filho',
+                        'FernandoMonteiro':'Fernando Monteiro',
+                        'FernandoRodolfo':'Fernando Rodolfo',
+                        'Frei Anastacio':'Frei Anastacio Ribeiro',
+                        'GilbertoNasciment':'Gilberto Nascimento',
+                        'Gildenemyr':'Pastor Gildenemyr',
+                        'Hercílio Diniz':'Hercílio Coelho Diniz',
+                        'HermesParcianello':'Hermes Parcianello',
+                        'Isnaldo Bulhões Jr':'Isnaldo Bulhões Jr.',
+                        'Israel Batista':'Professor Israel Batista',
+                        'João C. Bacelar':'João Carlos Bacelar',
+                        'João Marcelo S.':'João Marcelo Souza',
+                        'JoaquimPassarinho':'Joaquim Passarinho',
+                        'José Airton':'José Airton Cirilo',
+                        'Jose Mario Schrein':'Jose Mario Schreiner',
+                        'Julio Cesar Ribeir':'Julio Cesar Ribeiro',
+                        'Junio Amaral':'Cabo Junio Amaral',
+                        'Lafayette Andrada':'Lafayette de Andrada',
+                        'Leur Lomanto Jr.':'Leur Lomanto Júnior',
+                        'Luiz P. O.Bragança':'Luiz Philippe de Orleans e Bragança',
+                        'LuizAntônioCorrêa':'Luiz Antônio Corrêa',
+                        'Marcos A. Sampaio':'Marcos Aurélio Sampaio',
+                        'MargaridaSalomão':'Margarida Salomão',
+                        'MárioNegromonte Jr':'Mário Negromonte Jr.',
+                        'Maurício Dziedrick':'Maurício Dziedricki',
+                        'Mauro Benevides Fº':'Mauro Benevides Filho',
+                        'Nivaldo Albuquerq':'Nivaldo Albuquerque',
+                        'Ottaci Nascimento':'Otaci Nascimento',
+                        'Otto Alencar':'Otto Alencar Filho',
+                        'Pastor Isidório':'Pastor Sargento Isidório',
+                        'Paulo Martins':'Paulo Eduardo Martins',
+                        'Paulo Pereira':'Paulo Pereira da Silva',
+                        'Pedro A Bezerra':'Pedro Augusto Bezerra',
+                        'Pedro Lucas Fernan':'Pedro Lucas Fernandes',
+                        'Policial Sastre':'Policial Katia Sastre',
+                        'Pr Marco Feliciano':'Pr. Marco Feliciano',
+                        'Prof Marcivania':'Professora Marcivania',
+                        'Profª Dorinha':'Professora Dorinha Seabra Rezende',
+                        'Profª Rosa Neide':'Professora Rosa Neide',
+                        'Professora Dayane':'Professora Dayane Pimentel',
+                        'Rogério Peninha':'Rogério Peninha Mendonça',
+                        'Roman':'Evandro Roman',
+                        'Rubens Pereira Jr.': 'Rubens Pereira Jr',
+                        'SóstenesCavalcante':'Sóstenes Cavalcante',
+                        'Stephanes Junior':'Reinhold Stephanes Junior',
+                        'SubtenenteGonzaga':'Subtenente Gonzaga',
+                        'ToninhoWandscheer':'Toninho Wandscheer',
+                        'Vitor Hugo':'Major Vitor Hugo',
+                        'Wellington':'Wellington Roberto',
+                        'WladimirGarotinho':'Wladimir Garotinho',
+                        'Cap. Fábio Abreu':'Capitão Fábio Abreu',
+                        'JosimarMaranhãozi':'Josimar Maranhãozinho',
+                        'Bozzella':'Júnior Bozzella',
+                        'Tadeu  Filippelli':'Tadeu Filippelli',
+                        'Glaustin da Fokus':'Glaustin Fokus',
+                        'Pastor Gil':'Pastor Gildenemyr',
+                        'Marcelo Álvaro':'Marcelo Álvaro Antônio',
+                        'Pedro Augusto':'Pedro Augusto Palareti',
+                        'Pedro A Bezerra':'Pedro Augusto Bezerra',
+                        'Paulo V. Caleffi':'Paulo Vicente Caleffi',
+                        'Henrique Paraíso':'Henrique do Paraíso'}})
+    df = df.iloc[df['nome'].str.normalize('NFKD').argsort()]    
+
+    return render_template(
+        "votos-camara.html",
+        tables=[df.to_html(header=None, index=False)]
+    )    
+
+@app.route("/votos-senadores-1turno")
+def votos_senadores_1turno():
+    return render_template(
+        "votos-senadores-1turno.html",
+    )
+
+@app.route("/votos-senadores-1turno", methods=['POST'])
+def votos_senadores_1turno_post():
+    
+    partidos = pd.read_html('https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome', encoding='utf-8')
+    partidos_sen = partidos[0]
+    partidos_sen.drop(['UF', 'Período', 'Telefones', 'Correio Eletrônico'], axis=1, inplace=True)
+    
+    url = request.form['votacao_senado_1turno']
+    dfs = pd.read_html(url, encoding='utf-8')
+
+    df_1turno = pd.concat([dfs[1], dfs[2], dfs[3]])
+    df_1turno['Obs.'] = df_1turno['Obs.'].fillna('')
+    df_1turno['voto'] = df_1turno[['Voto', 'Obs.']].agg(''.join, axis=1)
+    df_1turno.drop(['#','Voto', 'Obs.'], axis=1, inplace=True)
+    df_1turno = df_1turno.replace({'voto' : {'-art. 13, caput - Atividade parlamentar':'Ausente', 
+                        '-Não Compareceu':'Ausente',                         
+                        '-Não registrou voto':'Ausente', 
+                        '-Presidente (art. 51 RISF)':'Não votou'}})
+    df_1turno = df_1turno.merge(partidos_sen.rename(columns={'Nome':'Parlamentar'}),how='outer')
+    df_1turno = df_1turno.replace({'Partido' : {'PODEMOS':'PODE'}})
+    df_1turno = df_1turno[['Parlamentar', 'Partido', 'voto']]
+
+    return render_template(
+        "votos-senadores-1turno.html",
+        tables=[df_1turno.to_html(header=None, index=False)]
+    )
+
+@app.route("/votos-senadores-2turno")
+def votos_senadores_2turno():
+    return render_template(
+        "votos-senadores-2turno.html",
+    )
+
+@app.route("/votos-senadores-2turno", methods=['POST'])
+def votos_senadores_2turno_post():
+    
+    partidos = pd.read_html('https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome', encoding='utf-8')
+    partidos_sen = partidos[0]
+    partidos_sen.drop(['UF', 'Período', 'Telefones', 'Correio Eletrônico'], axis=1, inplace=True)
+    
+    url = request.form['votacao_senado_2turno']
+    dfs = pd.read_html(url, encoding='utf-8')
+
+    df_2turno = pd.concat([dfs[5], dfs[6], dfs[7]])
+    df_2turno['Obs.'] = df_2turno['Obs.'].fillna('')
+    df_2turno['voto'] = df_2turno[['Voto', 'Obs.']].agg(''.join, axis=1)
+    df_2turno.drop(['#','Voto', 'Obs.'], axis=1, inplace=True)
+    df_2turno = df_2turno.replace({'voto' : {'-art. 13, caput - Atividade parlamentar':'Ausente', 
+                        '-Não Compareceu':'Ausente',                         
+                        '-Não registrou voto':'Ausente', 
+                        '-Presidente (art. 51 RISF)':'Não votou'}})
+    df_2turno = df_2turno.merge(partidos_sen.rename(columns={'Nome':'Parlamentar'}),how='outer')
+    df_2turno = df_2turno.replace({'Partido' : {'PODEMOS':'PODE'}})
+    df_2turno = df_2turno[['Parlamentar', 'Partido', 'voto']]
+
+    return render_template(
+        "votos-senadores-2turno.html",
+        tables=[df_2turno.to_html(header=None, index=False)]
+    )  
 
 @app.route("/downdetector")
 def down():
