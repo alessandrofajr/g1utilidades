@@ -9,3 +9,4 @@ pandas
 pytz
 requests
 sendgrid
+lxml
