@@ -161,9 +161,15 @@ def votos_senadores_1turno_post():
     df_1turno['voto'] = df_1turno[['Voto', 'Obs.']].agg(''.join, axis=1)
     df_1turno.drop(['#','Voto', 'Obs.'], axis=1, inplace=True)
     df_1turno = df_1turno.replace({'voto' : {'-art. 13, caput - Atividade parlamentar':'Ausente', 
-                        '-Não Compareceu':'Ausente',                         
-                        '-Não registrou voto':'Ausente', 
-                        '-Presidente (art. 51 RISF)':'Não votou'}})
+                                             '-Presente (art. 40 - em Missão)':'Ausente',
+                                             'art. 43, II - Licença particular':'Ausente',
+                                             'art. 13, caput - Atividade parlamentar':'Ausente',
+                                             'art. 43, I - Licença saúde':'Ausente',
+                                             '-Presente (art. 40 - em Missão)': 'Ausente',
+                                             '-Presente (art. 40 - em Missão)': 'Ausente',
+                                             '-Não Compareceu':'Ausente',
+                                             '-Não registrou voto':'Ausente', 
+                                             '-Presidente (art. 51 RISF)':'Não votou'}})
     df_1turno = df_1turno.merge(partidos_sen.rename(columns={'Nome':'Parlamentar'}),how='outer')
     df_1turno = df_1turno.replace({'Partido' : {'PODEMOS':'PODE'}})
     df_1turno = df_1turno[['Parlamentar', 'Partido', 'voto']]
@@ -194,9 +200,15 @@ def votos_senadores_2turno_post():
     df_2turno['voto'] = df_2turno[['Voto', 'Obs.']].agg(''.join, axis=1)
     df_2turno.drop(['#','Voto', 'Obs.'], axis=1, inplace=True)
     df_2turno = df_2turno.replace({'voto' : {'-art. 13, caput - Atividade parlamentar':'Ausente', 
-                        '-Não Compareceu':'Ausente',                         
-                        '-Não registrou voto':'Ausente', 
-                        '-Presidente (art. 51 RISF)':'Não votou'}})
+                                             '-Presente (art. 40 - em Missão)':'Ausente',
+                                             'art. 43, II - Licença particular':'Ausente',
+                                             'art. 13, caput - Atividade parlamentar':'Ausente',
+                                             'art. 43, I - Licença saúde':'Ausente',
+                                             '-Presente (art. 40 - em Missão)': 'Ausente',
+                                             '-Presente (art. 40 - em Missão)': 'Ausente',
+                                             '-Não Compareceu':'Ausente',
+                                             '-Não registrou voto':'Ausente', 
+                                             '-Presidente (art. 51 RISF)':'Não votou'}})
     df_2turno = df_2turno.merge(partidos_sen.rename(columns={'Nome':'Parlamentar'}),how='outer')
     df_2turno = df_2turno.replace({'Partido' : {'PODEMOS':'PODE'}})
     df_2turno = df_2turno[['Parlamentar', 'Partido', 'voto']]
