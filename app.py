@@ -2,6 +2,7 @@ import requests
 import re
 
 import pandas as pd
+import lxml
 from bs4 import BeautifulSoup
 from flask import Flask, request, redirect, render_template, url_for
 
