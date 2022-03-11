@@ -34,12 +34,12 @@ def votos_camara_post():
 
     df = pd.DataFrame(votos)
 
-    df = df.drop('votou', 1)
+    df = df.drop('votou', axis=1)
     df['voto'] = df['voto'].fillna('Ausente')
     df = df.replace({'voto' : {'Art. 17':'Não votou'}})
-    df['nomePartido'] = df['nomePartido'].str.replace(r"([()])","")
+    df['nomePartido'] = df['nomePartido'].str.replace(r"([()])","", regex=True)
     df[['nomePartido', 'UF']] = df['nomePartido'].str.split('-', 1, expand=True)
-    df = df.drop('UF', 1)
+    df = df.drop('UF', axis=1)
     df = df.replace({'nomePartido' : {'Republican':'Republicanos', 
                         'Podemos':'PODE', 
                         'PCdoB':'PC do B',
