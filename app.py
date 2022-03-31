@@ -46,6 +46,7 @@ def votos_camara_post():
                         'Solidaried':'SOLIDARIEDADE', 
                         'S.Part.':'S/Partido'}})
     df = df.replace({'nome' : {'Alencar S. Braga':'Alencar Santana Braga', 
+                               'Alencar Santana':'Alencar Santana Braga',
                         "AlexandreSerfiotis":"Alexandre Serfiotis", 
                         'Arthur O. Maia':'Arthur Oliveira Maia', 
                         'Cap. Alberto Neto':'Capitão Alberto Neto', 
