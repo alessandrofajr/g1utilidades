@@ -113,6 +113,7 @@ def votos_camara_post():
                         'Profª Dorinha':'Professora Dorinha Seabra Rezende',
                         'Profª Rosa Neide':'Professora Rosa Neide',
                         'Professora Dayane':'Professora Dayane Pimentel',
+                        'RRenato Queiroz':'Renato Queiroz',       
                         'Rogério Peninha':'Rogério Peninha Mendonça',
                         'Roman':'Evandro Roman',
                         'Rubens Pereira Jr.': 'Rubens Pereira Jr',
