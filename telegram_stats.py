@@ -24,6 +24,8 @@ df = pd.DataFrame({
     'subscribers':channel_subs,
     'extraction_date':extraction_date})
 
+df_list = df.values.tolist()    
+
 decoded_content = os.environ["GOOGLE_SHEETS_CREDENTIALS"] #Credenciais do Google Sheets
 decoded_credentials = base64.b64decode(decoded_content)
 credentials = json.loads(decoded_credentials)
