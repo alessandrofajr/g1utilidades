@@ -6,6 +6,7 @@ from pytz import timezone
 import pytz
 import gspread
 import base64
+import os
 
 token = os.environ["TELEGRAM_TOKEN"]
 channels = ['tsejus','jairbolsonarobrasil', 'LulanoTelegram', 'cirogomes']
