@@ -30,6 +30,5 @@ credentials = json.loads(decoded_credentials)
 spreadsheet_id = os.environ["GOOGLE_SHEET_ID_TELEGRAM"]
 service_account = gspread.service_account_from_dict(credentials)
 sh = service_account.open_by_key(spreadsheet_id)
-
-worksheet = sh.add_worksheet(title=f"{date.today()}", rows="1", cols="1") #Adicionando o dataframe em uma worksheet do Google Sheets
-set_with_dataframe(worksheet, df)
+worksheet = sh.worksheet("Página1")
+worksheet.append_rows(df_list)
