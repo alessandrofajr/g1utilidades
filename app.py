@@ -28,6 +28,7 @@ def votos_camara_post():
     soup = BeautifulSoup(page.content, 'html.parser')
     votacao = soup.find('div', class_='titulares')
 
+
     votos = []
     for li in votacao.select('li'):
         votos.append({x.get('class')[0]: x.text for x in li.select('span')})
@@ -46,14 +47,14 @@ def votos_camara_post():
                         'Solidaried':'SOLIDARIEDADE', 
                         'S.Part.':'S/Partido'}})
     df = df.replace({'nome' : {'Alencar S. Braga':'Alencar Santana Braga', 
-                               'Alencar Santana':'Alencar Santana Braga',
+                                'Alencar Santana':'Alencar Santana Braga',
                         "AlexandreSerfiotis":"Alexandre Serfiotis", 
                         'Arthur O. Maia':'Arthur Oliveira Maia', 
                         'Cap. Alberto Neto':'Capitão Alberto Neto', 
                         'Carlos Gaguim': 'Carlos Henrique Gaguim', 
                         'Cezinha Madureira': 'Cezinha de Madureira',
                         'Charlles Evangelis':'Charlles Evangelista',
-                        'Chico D´Angelo':"Chico D'Angelo",
+                        "Chico D´Angelo":"Chico D'Angelo",
                         'Christiane Yared':'Christiane de Souza Yared',
                         'CoronelChrisóstom':'Coronel Chrisóstomo',
                         'Daniela Waguinho':'Daniela do Waguinho',
